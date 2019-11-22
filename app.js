@@ -23,4 +23,6 @@ io.sockets.on('connection', function(socket) {
 
 });
 
-app.set('port', process.env.PORT || 8080);
+const server = http.listen(9000, function() {
+    console.log('listening on *:8080');
+});
