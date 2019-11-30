@@ -2,15 +2,17 @@
 <html>
   <head>
     <title>Simple Group Chat on Node.js</title>
+    <link href="https://fonts.googleapis.com/css?family=Solway&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font: 13px Helvetica, Arial; }
-        form { background: #fff; padding: 3px; position: fixed; bottom: 0; width: 100%; border-color: #000; border-top-style: solid; border-top-width: 1px;}
-        form input { border-style: solid; border-width: 1px; padding: 10px; width: 85%; margin-right: .5%; }
-        form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; margin-left: 2%; }
+        body { font-size: 16px; font-family: 'Solway', serif; }
+        form { background: #fff; padding: 3px; position: fixed; bottom: 0; width: 100%; border-color: rgb(151, 136, 136); border-top-style: solid; border-top-width: 1px;}
+        form input { border-style: solid; border-width: 1px; padding: 10px; width: 85%; margin-right: .5%; border-radius: 24px; border-color: rgb(122, 112, 112);}
+        form button { width: 9%;  border: none; padding: 10px; margin-left: 2%; }
         #messages { list-style-type: none; margin: 0; padding: 0; }
         #messages li { padding: 5px 10px; }
         #messages li:nth-child(odd) { background: #eee; }
+        button {color: white; border-radius: 4px; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2); background: rgb(28, 184, 65); border-radius: 24px;}
     </style>
     <script src="../../socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -18,26 +20,23 @@
   <body>
     <ul id="messages"></ul>
     <form action="/" method="POST" id="chatForm">
-      <input id="txt" autocomplete="off" autofocus="on" oninput="isTyping()" placeholder="type your message here..." /><button>Send</button>
+      <input id="txt" autocomplete="off" autofocus="on" oninput="isTyping()" placeholder="type your message here..." />
+      <button>Send</button>
     </form>
     <script>
             var socket = io.connect('http://localhost:8080');
-            // submit text message without reload/refresh the page
             $('form').submit(function(e){
-                e.preventDefault(); // prevents page reloading
+                e.preventDefault();
                 socket.emit('chat_message', $('#txt').val());
                 $('#txt').val('');
                 return false;
             });
-            // append the chat text message
             socket.on('chat_message', function(msg){
                 $('#messages').append($('<li>').html(msg));
             });
-            // append text if someone is online
             socket.on('is_online', function(username) {
                 $('#messages').append($('<li>').html(username));
             });
-            // ask username
             var username = prompt('Please tell me your name');
             socket.emit('username', username);
     </script>
